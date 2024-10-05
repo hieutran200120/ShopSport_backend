@@ -24,6 +24,7 @@ namespace shopsport.Entities
 		public Guid User_id { get; set; }
 		public User User { get; set; }
 		public ICollection<OrderDetail> OrderDetails { get; set; }
+		public ICollection<Returns> ReturnProducts { get; set; }
 	}
 	public class OrderEntityConfiguration : IEntityTypeConfiguration<Order>
 	{

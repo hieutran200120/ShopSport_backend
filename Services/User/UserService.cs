@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using shopsport.CommonDto;
+using shopsport.Exceptions;
 using shopsport.Infrastructure.Auth;
+using shopsport.LinQ;
+using shopsport.Services.Product.Dto;
 using shopsport.Services.User.Dto;
 
 namespace shopsport.Services.User
@@ -20,9 +23,10 @@ namespace shopsport.Services.User
 			_hostEnvironment = hostEnvironment;
 			_httpContextAccessor = httpContextAccessor;
 		}
-		public async Task<PagingResponseDto<UserDto>> GetCurrentUser()
+		public async Task<PagingResponseDto<UserDto>> GetCurrentUser(QueryGlobalUserRequestDto request)
 		{
 			var userQuery = _mainDbContext.Users
+				.WhereIf(request.Id != Guid.Empty, x => x.Id.Equals(request.Id))
 				.Select(x => new UserDto
 				{
 					Id  = x.Id,
@@ -92,6 +96,48 @@ namespace shopsport.Services.User
 				Roles = user.Roles,
 				Avatar = user.Avatar,
 				Token = _authService.GenerateToken(user)
+			};
+		}
+		public async Task<UserDto> DeleteUser(Guid Id)
+		{
+			var user = _mainDbContext.Users.FirstOrDefault(x => x.Id == Id);
+			_mainDbContext.Users.Remove(user);
+			await _mainDbContext.SaveChangesAsync();
+
+			return new UserDto
+			{
+				Id = user.Id,
+				LastName= user.LastName,
+				FirstName= user.FirstName,
+				Email = user.Email,
+				PhoneNumber= user.PhoneNumber,
+				Roles = user.Roles,
+				Avatar = user.Avatar,
+
+			};
+		}
+		public async Task<UserDto> UpdateUser(Guid Id, RegisterDto request)
+		{
+			var user = _mainDbContext.Users.FirstOrDefault(x => x.Id == Id);
+			if (user == null)
+			{
+				throw new RestException(System.Net.HttpStatusCode.NotFound, "No article");
+			}
+			user.FirstName = request.FirstName;
+			user.LastName = request.LastName;
+			user.Email = request.Email;
+			user.PhoneNumber = request.PhoneNumber;
+			user.Roles = request.Role;
+			user.Avatar = await SaveImage(request.ImageFile);
+			await _mainDbContext.SaveChangesAsync();
+			return new UserDto
+			{
+			FirstName = user.FirstName,
+			LastName = user.LastName,
+			Email = user.Email,
+			PhoneNumber = user.PhoneNumber,
+			Roles = user.Roles,
+			Avatar = user.Avatar,
 			};
 		}
 		public async Task<string> SaveImage(IFormFile imageFile)

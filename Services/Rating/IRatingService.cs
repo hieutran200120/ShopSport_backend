@@ -5,7 +5,9 @@ namespace shopsport.Services.Rating
 {
 	public interface IRatingService
 	{
-		Task<PagingResponseDto<RatingDto>> GetRating();
+		Task<PagingResponseDto<GetRatingDto>> GetRating(QueryGlobalRatingRequestDto request);
 		Task<RatingDto> PostRating(RatingDto request);
+		Task<RatingDto> DeleteRating(Guid Id);
+		Task<List<RatingCountDto>> CountRating(QueryGlobalRatingRequestDto request);
 	}
 }

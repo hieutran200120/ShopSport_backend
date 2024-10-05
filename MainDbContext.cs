@@ -21,6 +21,7 @@ namespace shopsport
 		public DbSet<OrderDetail> OrderDetails { get; set; }
 		public DbSet<ProductCategoryParent> ProductCategoriesParent { get; set; }
 		public DbSet<Rating>Ratings { get; set; }
+		public DbSet<Returns> ReturnProducts { get; set; }
 
 
 		public MainDbContext(DbContextOptions<MainDbContext> options) : base(options) { }

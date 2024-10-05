@@ -23,8 +23,12 @@ namespace shopsport.Services.Product
 		.Include(product => product.ProductCategory)
 		.WhereIf(request.Id != Guid.Empty, x => x.Id.Equals(request.Id))
 		.WhereIf(request.CategoryParent_id != Guid.Empty, x => x.ProductCategory.ProductCategoriesParent_id.Equals(request.CategoryParent_id))
+		.WhereIf(request.SupplierList != null && request.SupplierList.Any(), x => request.SupplierList.Contains(x.Supplier_id))
 		.WhereIf(request.CategoryList != null && request.CategoryList.Any(), x => request.CategoryList.Contains(x.ProductCategory_id))
-		.WhereIf(!string.IsNullOrEmpty(request.Name), x => x.Name.Contains(request.Name))
+		.WhereIf(!string.IsNullOrEmpty(request.Name), x => x.Name.ToLower().Contains(request.Name.ToLower()))
+		.WhereIf(request.PriceMin != 0, x => x.Price >= request.PriceMin)
+		.WhereIf(request.PriceMax != 0, x => x.Price <= request.PriceMax)
+		.WhereIf(request.IsStatus != 0, x => x.IsStatus == request.IsStatus)
 		.OrderByDescending(x => x.CreatedAt);
 			var items = await query
 		  .Select(x => new GetProductDto
@@ -32,14 +36,16 @@ namespace shopsport.Services.Product
 			  Id = x.Id,
 			  Name = x.Name,
 			  Price = x.Price,
+			  IsStatus=x.IsStatus,
 			  Quantity = x.Quantity,
 			  PromotionPrice = x.PromotionPrice,
 			  Description = x.Description,
+			  InportPrice = x.InportPrice,
 			  Image = x.Image.ToList(),
 			  Category = new Dto.CommonDto { Name = x.ProductCategory.Name, Id = x.ProductCategory.Id },
 			  Supplier = new Dto.CommonDto { Name = x.Supplier.Name, Id = x.Supplier.Id }
 		  })
-		   .ToListAsync();
+			.Paging(request.PageIndex, request.Limit).ToListAsync();
 			var TotalCount = await query.CountAsync();
 			return new PagingResponseDto<GetProductDto>
 			{
@@ -54,11 +60,13 @@ namespace shopsport.Services.Product
 			{
 				Name = request.Name,
 				Price = request.Price,
+				InportPrice= request.InportPrice,
 				PromotionPrice = request.PromotionPrice,
 				Quantity= request.Quantity,
 				Image = await SaveImages(request.ImageFiles),
 				Description = request.Description,
 				ProductCategory_id = request.Category.Id,
+				IsStatus = request.IsStatus,
 				Supplier_id = request.Supplier.Id			
 			};
 			await _mainDbContext.Products.AddAsync(product);
@@ -94,11 +102,11 @@ namespace shopsport.Services.Product
 			{
 				throw new RestException(System.Net.HttpStatusCode.NotFound, "No article");
 			}
-			product.Name = request?.Name;
-			product.Description = request?.Description;
+			product.Name = request.Name;
+			product.Description = request.Description;
 			product.Price = request.Price;
+			product.IsStatus= request.IsStatus;
 			product.Quantity= request.Quantity;
-			product.IsStatus = request.IsStatus;
 			product.Image = await SaveImages(request.ImageFiles);
 			product.PromotionPrice = request.PromotionPrice;
 			product.ProductCategory_id = request.Category.Id;
@@ -109,11 +117,12 @@ namespace shopsport.Services.Product
 				Id = product.Id,
 				Name = product.Name,
 				Price = product.Price,
+				Quantity = product.Quantity,
 				PromotionPrice = product.PromotionPrice,
 				Description = product.Description,
 				Image = product.Image,
-				Category = new Dto.CommonDto { Name = product.ProductCategory.Name, Id = product.ProductCategory.Id },
-				Supplier = new Dto.CommonDto { Name = product.Supplier.Name, Id = product.Supplier.Id }
+				Category = product.ProductCategory != null ? new Dto.CommonDto { Name = product.ProductCategory.Name, Id = product.ProductCategory.Id } : null,
+				Supplier = product.Supplier != null ? new Dto.CommonDto { Name = product.Supplier.Name, Id = product.Supplier.Id } : null
 			};
 		}
 		public async Task<List<string>> SaveImages(List<IFormFile> imageFiles)

@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using shopsport.CommonDto;
+using shopsport.Exceptions;
 using shopsport.Services.District.Dto;
 using shopsport.Services.Product.Dto;
 using shopsport.Services.ProductCategoryParent.Dto;
+using shopsport.Services.ProductCategoty.Dto;
 
 namespace shopsport.Services.ProductCategoryParent
 {
@@ -46,6 +48,33 @@ namespace shopsport.Services.ProductCategoryParent
 			return new RequestProductCategoryParent
 			{
 				Name = productCategoryParent.Name,
+			};
+		}
+		public async Task<RequestProductCategoryParent> DeleteProductCategoryParent(Guid Id)
+		{
+			var categoryParent = _mainDbContext.ProductCategoriesParent.FirstOrDefault(x => x.Id == Id);
+			_mainDbContext.ProductCategoriesParent.Remove(categoryParent);
+			await _mainDbContext.SaveChangesAsync();
+
+			return new RequestProductCategoryParent
+			{
+				Name = categoryParent.Name,
+
+			};
+		}
+		public async Task<RequestProductCategoryParent> UpdateProductCategoryParent(Guid Id, RequestProductCategoryParent request)
+		{
+			var categoryParent = _mainDbContext.ProductCategoriesParent.FirstOrDefault(x => x.Id == Id);
+			if (categoryParent == null)
+			{
+				throw new RestException(System.Net.HttpStatusCode.NotFound, "No article");
+			}
+			categoryParent.Name = request.Name;
+
+			await _mainDbContext.SaveChangesAsync();
+			return new RequestProductCategoryParent
+			{
+				Name = categoryParent.Name,
 			};
 		}
 	}

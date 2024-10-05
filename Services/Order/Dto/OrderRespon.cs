@@ -7,7 +7,7 @@ namespace shopsport.Services.Order.Dto
 	{
 		public Guid Id { get; set; }
 		public OrderDto Order { get; set; }
-		public ProductDto OrderItems { get; set; }
+		public GetProductDto OrderItems { get; set; }
 		public OrderItemDto OrderItem { get; set; }
 	}
 }

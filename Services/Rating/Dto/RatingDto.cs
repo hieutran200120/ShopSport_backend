@@ -1,4 +1,5 @@
 ﻿using shopsport.Entitycommon;
+using shopsport.Services.Product.Dto;
 using shopsport.Services.User.Dto;
 
 namespace shopsport.Services.Rating.Dto
@@ -10,5 +11,6 @@ namespace shopsport.Services.Rating.Dto
 		public Guid Product_id { get; init; }
 		public Guid User_id { get; init; }
 		public UserDto User { get; init; }
+		public string NameProduct { get; init; }
 	}
 }

@@ -47,3 +47,4 @@ D:\.net\shopsport\shopsport\obj\Debug\net6.0\refint\shopsport.dll
 D:\.net\shopsport\shopsport\obj\Debug\net6.0\shopsport.pdb
 D:\.net\shopsport\shopsport\obj\Debug\net6.0\shopsport.genruntimeconfig.cache
 D:\.net\shopsport\shopsport\obj\Debug\net6.0\ref\shopsport.dll
+D:\.net\shopsport\shopsport\bin\Debug\net6.0\Newtonsoft.Json.dll

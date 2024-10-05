@@ -12,6 +12,7 @@ namespace shopsport.Entities
 			public Order Order { get; set; }
 			public Guid ProductId { get; set; }	
 			public Product Product { get; set; }
+		
 	}
 	public class OrderDetailEntityConfiguration : IEntityTypeConfiguration<OrderDetail>
 	{

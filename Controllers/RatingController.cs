@@ -18,15 +18,27 @@ namespace shopsport.Controllers
 			_ratingService = ratingService;
 		}
 		[HttpGet]
-		public async Task<IActionResult> GetRating()
+		public async Task<IActionResult> GetRating([FromQuery] QueryGlobalRatingRequestDto request)
 		{
-			var response = await _ratingService.GetRating();
+			var response = await _ratingService.GetRating(request);
+			return Ok(response);
+		}
+		[HttpGet("countRating")]
+		public async Task<IActionResult>  CountRating([FromQuery] QueryGlobalRatingRequestDto request)
+		{
+			var response = await _ratingService.CountRating(request);
 			return Ok(response);
 		}
 		[HttpPost]
 		public async Task<IActionResult> PostRating(RatingDto request)
 		{
 			var res = await _ratingService.PostRating(request);
+			return Ok(res);
+		}
+		[HttpDelete]
+		public async Task<IActionResult> DeleteRating(Guid Id)
+		{
+			var res = await _ratingService.DeleteRating(Id);
 			return Ok(res);
 		}
 	}

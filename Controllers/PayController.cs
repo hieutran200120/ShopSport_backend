@@ -18,13 +18,14 @@ namespace shopsport.Controllers
 		}
 
 		[HttpPost("create-payment-url")]
-		public IActionResult CreatePaymentUrl([FromBody] OrderRequestDto model)
+		public async Task<IActionResult> CreatePaymentUrl([FromBody] OrderRequestDto model)
 		{
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
 			}
-			var url = _vnPayService.CreatePaymentUrl(model, HttpContext);
+
+			var url = await _vnPayService.CreatePaymentUrl(model, HttpContext);
 
 			return Ok(new { redirectUrl = url });
 		}

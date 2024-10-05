@@ -7,5 +7,7 @@ namespace shopsport.Services.Supplier
 	{
 		Task<PagingResponseDto<GetSupplierDto>> GetSupplier();
 		Task<SupplierDto> PostSupplier(SupplierDto request);
+		Task<SupplierDto> DeleteSupplier(Guid Id);
+		Task<SupplierDto> UpdateSupplier(Guid Id, SupplierDto request);
 	}
 }

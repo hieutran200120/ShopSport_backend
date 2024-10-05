@@ -5,7 +5,7 @@ namespace shopsport.Services.VnPay
 {
     public interface IVnPayService
     {
-		string CreatePaymentUrl(OrderRequestDto model, HttpContext context);
+		Task<string> CreatePaymentUrl(OrderRequestDto model, HttpContext context);
 		PaymentResponseModel PaymentExecute(IQueryCollection collections);
 	}
 }

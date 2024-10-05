@@ -8,5 +8,7 @@ namespace shopsport.Services.ProductCategoryParent
 	{
 		Task<PagingResponseDto<GetProductParentDto>> GetProductCategoryParent();
 		Task<RequestProductCategoryParent> PostProductCategoryParent(RequestProductCategoryParent request);
+		Task<RequestProductCategoryParent> DeleteProductCategoryParent(Guid Id);
+		Task<RequestProductCategoryParent> UpdateProductCategoryParent(Guid Id, RequestProductCategoryParent request);
 	}
 }

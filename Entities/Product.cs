@@ -9,6 +9,7 @@ namespace shopsport.Entities
 		public string Name { get; set; }
 		public string Description { get; set; }
 		public List<string> Image { get; set; }
+		public decimal InportPrice { get; set; }//them gia nhap
 		public decimal Price { get; set; }
 		public decimal PromotionPrice { get; set; }
 		public int IsStatus { get; set; }
@@ -19,6 +20,7 @@ namespace shopsport.Entities
 		public Supplier Supplier { get; set; }
 		public ICollection<Rating> Ratings { get; set; }
 		public ICollection<OrderDetail> OrderDetails { get; set; }
+		public ICollection<Returns> ReturnProducts { get; set; }
 	}
 	public class ProductEntityConfiguration : IEntityTypeConfiguration<Product>
 	{

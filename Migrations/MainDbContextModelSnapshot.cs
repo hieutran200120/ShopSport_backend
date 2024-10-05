@@ -160,6 +160,9 @@ namespace shopsport.Migrations
                     b.Property<List<string>>("Image")
                         .HasColumnType("text[]");
 
+                    b.Property<decimal>("InportPrice")
+                        .HasColumnType("numeric");
+
                     b.Property<int>("IsStatus")
                         .HasColumnType("integer");
 
@@ -292,6 +295,42 @@ namespace shopsport.Migrations
                     b.HasIndex("User_id");
 
                     b.ToTable("Rating", "order");
+                });
+
+            modelBuilder.Entity("shopsport.Entities.Returns", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("LastUpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("Order_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid>("Product_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Order_id");
+
+                    b.HasIndex("Product_id");
+
+                    b.ToTable("Returns", "order");
                 });
 
             modelBuilder.Entity("shopsport.Entities.Supplier", b =>
@@ -498,6 +537,25 @@ namespace shopsport.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("shopsport.Entities.Returns", b =>
+                {
+                    b.HasOne("shopsport.Entities.Order", "Order")
+                        .WithMany("ReturnProducts")
+                        .HasForeignKey("Order_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("shopsport.Entities.Product", "Product")
+                        .WithMany("ReturnProducts")
+                        .HasForeignKey("Product_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("shopsport.Entities.Ward", b =>
                 {
                     b.HasOne("shopsport.Entities.District", "District")
@@ -519,6 +577,8 @@ namespace shopsport.Migrations
             modelBuilder.Entity("shopsport.Entities.Order", b =>
                 {
                     b.Navigation("OrderDetails");
+
+                    b.Navigation("ReturnProducts");
                 });
 
             modelBuilder.Entity("shopsport.Entities.Product", b =>
@@ -526,6 +586,8 @@ namespace shopsport.Migrations
                     b.Navigation("OrderDetails");
 
                     b.Navigation("Ratings");
+
+                    b.Navigation("ReturnProducts");
                 });
 
             modelBuilder.Entity("shopsport.Entities.ProductCategory", b =>

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using shopsport.Services.User.Dto;
 using shopsport.Services.User;
+using shopsport.Services.Product.Dto;
 
 namespace shopsport.Controllers
 {
@@ -21,15 +22,27 @@ namespace shopsport.Controllers
 			return Ok(res);
 		}
 		[HttpGet]
-		public async Task<IActionResult> GetCurrentUser()
+		public async Task<IActionResult> GetCurrentUser([FromQuery] QueryGlobalUserRequestDto request)
 		{
-			var res = await _userService.GetCurrentUser();
+			var res = await _userService.GetCurrentUser(request);
 			return Ok(res);
 		}
 		[HttpPost]
 		public async Task<IActionResult> Register([FromForm] RegisterDto request)
 		{
 			var res = await _userService.Register(request);
+			return Ok(res);
+		}
+		[HttpDelete]
+		public async Task<IActionResult>  DeleteUser(Guid Id)
+		{
+			var res = await _userService.DeleteUser(Id);
+			return Ok(res);
+		}
+		[HttpPut]
+		public async Task<IActionResult> UpdateUser([FromQuery] Guid Id, [FromForm] RegisterDto request)
+		{
+			var res = await _userService.UpdateUser(Id, request);
 			return Ok(res);
 		}
 	}

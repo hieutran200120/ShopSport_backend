@@ -10,6 +10,7 @@ using shopsport.Services.ProductCategoryParent;
 using shopsport.Services.ProductCategoty;
 using shopsport.Services.Province;
 using shopsport.Services.Rating;
+using shopsport.Services.Returns;
 using shopsport.Services.Supplier;
 using shopsport.Services.User;
 using shopsport.Services.VnPay;
@@ -37,6 +38,7 @@ namespace shopsport.Extentions
 			services.AddScoped<IVnPayService, VnPayService>();
 			services.AddScoped<IRatingService, RatingService>();
 			services.AddScoped<IProductCategoryParentService, ProductCategoryParentService>();
+			services.AddScoped<IReturnSerive,ReturnService>();
 		}
 		public static void ConfigureMigration(this IServiceCollection services)
 		{

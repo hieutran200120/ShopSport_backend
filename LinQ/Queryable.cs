@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-
+using Newtonsoft.Json;
 namespace shopsport.LinQ
 {
 	public static class Queryable
@@ -20,6 +20,15 @@ namespace shopsport.LinQ
 			var offset = (Math.Max(pageIndex, 1) - 1) * pageSize;
 			return source.Skip(offset).Take(pageSize);
 		}
+			public static void SetJson(this ISession session, string key, object value)
+			{
+				session.SetString(key, JsonConvert.SerializeObject(value));
+			}
 
+			public static T GetJson<T>(this ISession session, string key)
+			{
+				var value = session.GetString(key);
+				return value == null ? default(T) : JsonConvert.DeserializeObject<T>(value);
+			}
 	}
 }

@@ -36,10 +36,34 @@ namespace shopsport.Controllers
 			var response = await _orderService.GetOrderId(request);
 			return Ok(response);
 		}
+		[HttpGet("OrderProduct")]
+		public async Task<IActionResult> GetOrderProduct([FromQuery] QueryGlobalOrderRequestDto request)
+		{
+			var response = await _orderService.GetOrderProduct(request);
+			return Ok(response);
+		}
+		[HttpGet("ReportRevenue")]
+		public async Task<IActionResult> ReportRevenue([FromQuery] QueryGlobalOrderRequestDto request)
+		{
+			var response = await _orderService.ReportRevenue(request);
+			return Ok(response);
+		}
+		[HttpGet("GetOrderReturn")]
+		public async Task<IActionResult> GetOrderReturn([FromQuery] QueryGlobalOrderRequestDto request)
+		{
+			var response = await _orderService.GetOrderReturn(request);
+			return Ok(response);
+		}
 		[HttpPut]
 		public async Task<IActionResult> UpdateOrder([FromQuery] Guid Id, [FromBody] changeStatusDto request)
 		{
 			var res = await _orderService.UpdateOrder(Id, request);
+			return Ok(res);
+		}
+		[HttpDelete]
+		public async Task<IActionResult> DeleteOrder(Guid Id)
+		{
+			var res = await _orderService.DeleteOrder(Id);
 			return Ok(res);
 		}
 	}
